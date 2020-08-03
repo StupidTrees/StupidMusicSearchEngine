@@ -1,0 +1,155 @@
+<!DOCTYPE html >
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org" lang="en">
+
+
+<head lang="en">
+    <meta charset="UTF-8"/>
+    <meta name="referrer" content="no-referrer"/>
+    <meta name="viewport"
+          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <title>StupidSearchEngine</title>
+    <style>
+        .results {
+            padding: 16px 16px 16px 16px;
+        }
+
+        .title {
+            padding: 16px 4px 16px 16px;
+        }
+
+        .header {
+            width: 100%;
+            font-size: 24px;
+            padding: 16px 16px 2px;
+        }
+
+        .horizontal {
+            display: flex;
+        }
+
+        .body {
+            width: 100%;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            display: -webkit-box;
+            -webkit-line-clamp: 3;
+            -webkit-box-orient: vertical;
+            padding: 8px 16px 2px;
+            max-height: 120px;
+        }
+        .div_foot {
+            position: absolute;
+            height: 50px;
+            text-align: center;
+            line-height: 50px;
+            width: 100%;
+        }
+        .naviBar {
+            border-radius: 24px;
+            box-shadow: 0 3px 12px rgba(0, 0, 0, 0.1), 0 3px 16px rgba(0, 0, 0, 0.1);
+            margin: 16px;
+        }
+        .searchBar {
+            border-radius: 24px;
+             margin: 16px;
+        }
+
+        .space {
+            margin: 16px 32px 32px;
+        }
+    </style>
+
+    <link href="../static/css/result.css" th:href="@{~/css/result.css}" type="text/css" rel="stylesheet"/>
+    <link rel="stylesheet" type="text/css" media="screen" href="//cdn.muicss.com/mui-0.10.3/css/mui.css"/>
+    <script src="//cdn.muicss.com/mui-0.10.3/js/mui.min.js"></script>
+</head>
+<body>
+<div class="mui-appbar">
+    <div class="horizontal">
+        <div class="mui--text-headline title">StupidSE</div>
+        <form id="search-box" class="searchBar mui-form--inline horizontal"
+              action="search" method="get"
+              style="max-width: 360px;align-content: center;background-color: white;height: 32px">
+            <div class="mui-textfield" style="width: 70%;padding: 0 0 0 16px;max-lines: 1;height: 100%">
+                <input type="text" name="text" id="query" value=" " th:value="${query}" >
+            </div>
+            <input class="mui-btn mui-btn--primary mui-btn--flat" type="submit" value="搜索" style="width: 30%;height: 100%">
+        </form>
+    </div>
+
+</div>
+
+<!--<div style="padding: 24px 16px 0;">-->
+<!--    <form  class="searchBarMain mui-form&#45;&#45;inline horizontal mui&#45;&#45;z2"-->
+<!--          action="search" method="get"-->
+<!--          style="height: 32px;width: 60%;max-width: 800px">-->
+<!--        <div class="mui-textfield" style="width: 100%;padding: 0 0 0 0;max-lines: 1;height: 100%">-->
+<!--            <label for="query"></label><input type="text" name="text" id="query" value=" ">-->
+<!--        </div>-->
+<!--        <input class="mui-btn mui-btn&#45;&#45;primary" type="submit" value="搜索" style="width: fit-content;height: 32px;">-->
+<!--    </form>-->
+
+<!--</div>-->
+<div class="results">
+
+    <h3 class="mui--text-subhead">
+
+        <span class="mui--text-accent" th:text="${query}"></span> 共搜索到 <span class="mui--text-accent"
+                                                                             th:text="${total}"></span> 条结果，当前第<span
+            th:text="${page}"></span>/<span th:text="${totalPages}"></span>页
+
+    </h3>
+
+    <div class="space"></div>
+
+    <div class="items" th:each="res:${resList}">
+        <div class="mui-panel horizontal"
+             style="padding: 0 0 0 0 ; max-height: 200px">
+
+            <img th:src="${res.img}"
+                 width="10%"
+                 height="auto"
+                 style="object-fit: cover;min-width: 100px;max-height: 200px"
+                 src="https://img1.doubanio.com/view/subject/m/public/s32291288.jpg">
+            <div style="width: 80%">
+                <div class="header" th:utext="${res.title}">
+                    这是标题
+                </div>
+                <div class="body" th:utext="${res.info}">
+                    Lover is the upcoming seventh studio album and major-label debut by American singer-songwriter
+                    Taylor Swift. It was released on released on August 23, 2019. The album is Swift's first release
+                    under Republic Records and Taylor Swift Productions. The lead single "Me!" featuring Brendon Urie of
+                    Panic! at the Disco was released on April 26, 2019. The second single "You Need to Calm Down" was
+                    released on June 13, 2019. The title track was released as the third single on August 16, 2019.
+                    Aside from Urie, Lover also features a collaboration with the Dixie Chicks.
+                </div>
+                <button class="mui-btn mui-btn--flat mui-btn--primary"
+                        style="padding: 0px 16px 0px"
+                        th:onclick="window.open([[${res.url}]])"
+                >查看
+                </button>
+            </div>
+
+        </div>
+    </div>
+</div>
+
+
+<div class="naviBar" style="width: 420px">
+    <tr th:each="page:${pageList}" style="width: 100%">
+        <a class="mui-btn mui-btn--small mui-btn--primary mui-btn--flat"
+           th:href="@{'/search?text='+${query}+'&page='+${page}}" th:text="${page}" style="width: 16px"></a>
+    </tr>
+</div>
+</div>
+
+
+</body>
+
+<footer>
+    <div class="div_foot">
+        &copy;2020 StupidTree HITSZ. All rights reserved.
+    </div>
+</footer>
+</html>  

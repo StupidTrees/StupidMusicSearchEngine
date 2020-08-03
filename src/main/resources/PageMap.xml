@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!-- 这里的namespace表示命名空间，防止和其他的Map里得id重复 -->
+<mapper namespace="Page">
+
+    <!-- id表示这个select的名字，只能唯一，以后就是通过这个id去找到这个select和下面的sql -->
+
+    <!-- #{}是占位符，里面的值可以是任意的 你可以写#{v}和这里的#{id}作用一样，我们需要告诉框架这个占位符是什么类型的，
+　　　　　　我这里的id是Integer类型，所以parameterType="Integer"  -->
+
+    <!-- 大家可以看到框架最右边是可以返回POJO类型的数据，所以我们配置返回的类型是User型，所以resultType是User型，要写全类名哦 -->
+    <select id="getPage" parameterType="Integer"
+            resultType="com.stupidtree.sse.model.Page">
+        select * from page where id = #{id}
+    </select>
+
+    <select id="getPages"  resultType="com.stupidtree.sse.model.Page">
+        select * from page
+    </select>
+
+    <select id="getPagesForward" resultType="com.stupidtree.sse.model.Page"
+            resultSetType="FORWARD_ONLY" fetchSize="-2147483648">
+        select * from page
+    </select>
+
+
+    <insert id="addPage" parameterType="com.stupidtree.sse.model.Page">
+        <!--
+        现在需要得到刚刚插入的记录中的主键值,只适用于自增主键的情况
+        LAST_INSERT_ID()
+        keyProperty：将查询到的主键值设置到parameterType指定对象中的那个属性
+        order：指定相对于insert的顺序
+        resultType：指定映射结果的结果类型
+        -->
+        <selectKey keyProperty="id" order="AFTER" resultType="java.lang.Integer">
+            SELECT LAST_INSERT_ID()
+        </selectKey>
+        INSERT INTO page(id,url,title,score,info,description,tracklist,comments,reviews,img,voted) VALUES(#{id},#{url},#{title},#{score},#{info},#{description},#{tracklist},#{comments},#{reviews},#{img},#{voted});
+    </insert>
+
+</mapper>
