@@ -4,23 +4,22 @@ import com.stupidtree.sse.crawler.Crawler;
 import com.stupidtree.sse.indexer.Indexer;
 import com.stupidtree.sse.model.SearchResult;
 import com.stupidtree.sse.searcher.Searcher;
-import com.stupidtree.sse.utils.Config;
-import com.stupidtree.sse.utils.JsonUtils;
 import net.minidev.json.JSONObject;
-import org.apache.http.util.TextUtils;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 
-import java.io.IOException;
-import java.util.HashMap;
-import java.util.Map;
-
-
+/**
+ * Springboot控制对象：映射http请求
+ */
 @org.springframework.stereotype.Controller
 public class Controller {
 
 
-
+    /**
+     * 进行检索
+     */
     @RequestMapping(value = "/search", method = RequestMethod.GET)
     public String search(@RequestParam("text") String text,
                          @RequestParam(value = "page",defaultValue = "1") int page,
@@ -33,6 +32,7 @@ public class Controller {
                 model.addAttribute("totalPages",result.getTotalPages());
                 model.addAttribute("query", text);
                 model.addAttribute("page",result.getPage());
+                model.addAttribute("time",result.getResponseTime());
                 model.addAttribute("resList", result.getResultItems());
             }
         } catch (Exception e) {
@@ -42,34 +42,10 @@ public class Controller {
 
     }
 
-    @ResponseBody
-    @RequestMapping("/config")
-    public JSONObject config(@RequestParam(value = "command", defaultValue = "show") String command,
-                             @RequestParam(value = "key", defaultValue = "") String key,
-                             @RequestParam(value = "val", defaultValue = "") String val) {
-        switch (command) {
-            case "show":
-                return JsonUtils.getJson(Config.getConfigs());
-            case "write":
-                if (TextUtils.isEmpty(key) || TextUtils.isEmpty(val)) {
-                    return JsonUtils.getErrorJson("param invalid");
-                } else {
-                    try {
-                        Config.writeConfig(key, val);
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                        return JsonUtils.getErrorJson(e.getMessage());
-                    }
-                    return JsonUtils.getJson(Config.getConfigs());
-                }
 
-        }
-        return JsonUtils.getJson(Config.getConfigs());
-    }
-
-
-
-
+    /**
+     * 控制台
+     */
     @RequestMapping(value = "/dashboard", method = RequestMethod.GET)
     public String dashboard(@RequestParam(value = "command", defaultValue = "state") String command,
                             Model model){
@@ -106,12 +82,4 @@ public class Controller {
     }
 
 
-    private HashMap<String,String> decodeForm(String form){
-        HashMap<String,String> res = new HashMap<>();
-        for(String s:form.split("&")){
-            String[] v = s.split("=");
-            res.put(v[0],v[1]);
-        }
-        return res;
-    }
 }

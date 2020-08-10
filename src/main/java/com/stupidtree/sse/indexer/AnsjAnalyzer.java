@@ -1,4 +1,4 @@
-package com.stupidtree.sse.searcher;
+package com.stupidtree.sse.indexer;
 
 
 import java.io.BufferedReader;
@@ -30,6 +30,10 @@ import org.nlpcn.commons.lang.util.StringUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+
+/**
+ * 适配Lucene的ANSJ切词实现
+ */
 public class AnsjAnalyzer extends Analyzer {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(AnsjAnalyzer.class);

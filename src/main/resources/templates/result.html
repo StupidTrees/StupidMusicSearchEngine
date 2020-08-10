@@ -13,6 +13,14 @@
         .results {
             padding: 16px 16px 16px 16px;
         }
+        .footer {
+            left: 0;
+            bottom: 0;
+            width: 100%;
+            height: 100%;
+            background-color: #eee;
+            z-index: 9999;
+        }
 
         .title {
             padding: 16px 4px 16px 16px;
@@ -22,6 +30,11 @@
             width: 100%;
             font-size: 24px;
             padding: 16px 16px 2px;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            display: -webkit-box;
+            -webkit-line-clamp: 1;
+            -webkit-box-orient: vertical;
         }
 
         .horizontal {
@@ -37,22 +50,48 @@
             -webkit-box-orient: vertical;
             padding: 8px 16px 2px;
             max-height: 120px;
+            max-width: 94%;
         }
-        .div_foot {
+
+        .copyright {
+            background-color: #eee;
             position: absolute;
-            height: 50px;
+            height: 32px;
             text-align: center;
-            line-height: 50px;
+            /*line-height: 32px;*/
             width: 100%;
         }
-        .naviBar {
-            border-radius: 24px;
-            box-shadow: 0 3px 12px rgba(0, 0, 0, 0.1), 0 3px 16px rgba(0, 0, 0, 0.1);
-            margin: 16px;
+
+        .toolBar{
+            position: fixed;
+            width: 100%;
+            z-index: 9999;
         }
+
+        .naviBar {
+            /*border-radius: 24px;*/
+            /*box-shadow: 0 3px 12px rgba(0, 0, 0, 0.1), 0 3px 16px rgba(0, 0, 0, 0.1);*/
+            /*margin: 16px;*/
+        }
+
+        .naviBox {
+            border-radius: 8px;
+            background-color: white;
+            min-width: 32px;
+            height: 24px;
+
+            text-align: center;
+            margin: 16px 8px 8px;
+            padding: 8px 2px 2px;
+            /*box-shadow: 0 3px 12px rgba(0, 0, 0, 0.1), 0 3px 16px rgba(0, 0, 0, 0.1);*/
+            width: auto;
+        }
+
         .searchBar {
             border-radius: 24px;
-             margin: 16px;
+            margin: 16px;
+            background-color: white;
+            z-index: 10000;
         }
 
         .space {
@@ -65,21 +104,27 @@
     <script src="//cdn.muicss.com/mui-0.10.3/js/mui.min.js"></script>
 </head>
 <body>
-<div class="mui-appbar">
-    <div class="horizontal">
-        <div class="mui--text-headline title">StupidSE</div>
-        <form id="search-box" class="searchBar mui-form--inline horizontal"
-              action="search" method="get"
-              style="max-width: 360px;align-content: center;background-color: white;height: 32px">
-            <div class="mui-textfield" style="width: 70%;padding: 0 0 0 16px;max-lines: 1;height: 100%">
-                <input type="text" name="text" id="query" value=" " th:value="${query}" >
-            </div>
-            <input class="mui-btn mui-btn--primary mui-btn--flat" type="submit" value="搜索" style="width: 30%;height: 100%">
-        </form>
-    </div>
+<div class="mui-appbar toolBar mui--z2">
+        <div class="horizontal">
+            <div class="mui--text-headline title"
+            >StupidSE</div>
+            <form id="search-box" class="searchBar mui-form--inline horizontal"
+                  action="search" method="get"
+                  style="max-width: 360px;align-content: center;background-color: white;height: 32px">
+                <div class="mui-textfield" style="width: 70%;padding: 0 0 0 16px;max-lines: 1;height: 100%">
+                    <input type="text" name="text" id="query" value=" " th:value="${query}">
+                </div>
+                <input class="mui-btn mui-btn--primary mui-btn--flat" type="submit" value="搜索"
+                       style="width: 30%;height: 100%">
+            </form>
+
+        </div>
+        </div>
+
+
+<div style="height: 50px">
 
 </div>
-
 <!--<div style="padding: 24px 16px 0;">-->
 <!--    <form  class="searchBarMain mui-form&#45;&#45;inline horizontal mui&#45;&#45;z2"-->
 <!--          action="search" method="get"-->
@@ -94,10 +139,9 @@
 <div class="results">
 
     <h3 class="mui--text-subhead">
-
         <span class="mui--text-accent" th:text="${query}"></span> 共搜索到 <span class="mui--text-accent"
-                                                                             th:text="${total}"></span> 条结果，当前第<span
-            th:text="${page}"></span>/<span th:text="${totalPages}"></span>页
+                                                                             th:text="${total}"></span> 条结果, 用时
+        <span class="mui--text-accent" th:text="${time}"></span>秒
 
     </h3>
 
@@ -125,7 +169,7 @@
                     Aside from Urie, Lover also features a collaboration with the Dixie Chicks.
                 </div>
                 <button class="mui-btn mui-btn--flat mui-btn--primary"
-                        style="padding: 0px 16px 0px"
+                        style="padding: 0 16px 0"
                         th:onclick="window.open([[${res.url}]])"
                 >查看
                 </button>
@@ -136,20 +180,21 @@
 </div>
 
 
-<div class="naviBar" style="width: 420px">
-    <tr th:each="page:${pageList}" style="width: 100%">
-        <a class="mui-btn mui-btn--small mui-btn--primary mui-btn--flat"
-           th:href="@{'/search?text='+${query}+'&page='+${page}}" th:text="${page}" style="width: 16px"></a>
-    </tr>
-</div>
-</div>
-
-
 </body>
 
-<footer>
-    <div class="div_foot">
+<div class="footer">
+    <div class="horizontal">
+        <div style="margin: 24px 16px 16px;">
+            当前第<span th:text="${page}"></span>/<span th:text="${totalPages}"></span>页
+        </div>
+        <div class="horizontal naviBar " th:each="page:${pageList}" style="float: left">
+            <a class="naviBox" th:href="@{'/search?text='+${query}+'&page='+${page}}" th:text="${page}"></a>
+        </div>
+
+    </div>
+    <div class="copyright">
         &copy;2020 StupidTree HITSZ. All rights reserved.
     </div>
-</footer>
+
+</div>
 </html>  

@@ -7,16 +7,19 @@ import java.io.OutputStream;
 import java.util.HashMap;
 import java.util.Properties;
 
+/**
+ * 配置类
+ */
 public class Config {
-    static HashMap<String,String> properties;
+    static HashMap<String,String> properties;//存放配置信息
 
-    static{
-        try {
-            init();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-    }
+//    static{ //静态初始化
+//        try {
+//            init();
+//        } catch (IOException e) {
+//            e.printStackTrace();
+//        }
+//    }
 
     public static String getStringConfig(String key){
         return properties.get(key);
@@ -32,11 +35,22 @@ public class Config {
         }
     }
 
-    public static HashMap<String,String> getConfigs(){
-        return properties;
+    public static float getFloatConfig(String key){
+        try {
+            String val = properties.get(key);
+            return Float.parseFloat(val);
+        } catch (NumberFormatException e) {
+            e.printStackTrace();
+            return -1;
+        }
     }
 
-    private static void init() throws IOException {
+
+    /**
+     * 初始化，装载配置
+     * @throws IOException:读文件错误
+     */
+    public static void init() throws IOException {
         properties = new HashMap<>();
         Properties props = new Properties();
         InputStream in = Config.class.getResourceAsStream("/config.properties");
@@ -47,16 +61,4 @@ public class Config {
         }
     }
 
-    public static void writeConfig(String key,String val) throws IOException {
-        Properties props = new Properties();
-        InputStream in = Config.class.getResourceAsStream("/config.properties");
-        props.load(in);
-        OutputStream output = new FileOutputStream("/config.properties");
-        props.setProperty(key, val); // 修改或新增属性键值对
-        props.store(output, "modify "+key+" value"); // store(OutputStream output, String comment)将修改结果写入输出流
-        output.close();
-        for (Object k:props.keySet()){
-            properties.put(k.toString(),props.getProperty(String.valueOf(k)));
-        }
-    }
 }

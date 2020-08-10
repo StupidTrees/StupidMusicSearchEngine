@@ -1,5 +1,4 @@
-package com.stupidtree.sse.searcher;
-import java.util.Collection;
+package com.stupidtree.sse.indexer;
 import java.io.IOException;
 import java.util.LinkedList;
 import java.util.List;
@@ -21,7 +20,6 @@ import org.slf4j.LoggerFactory;
 /**
  * Ansj分词器
  *
- * @author Birdy
  *
  */
 public final class AnsjTokenizer extends Tokenizer {

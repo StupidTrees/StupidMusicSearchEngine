@@ -6,10 +6,14 @@ import org.apache.ibatis.session.SqlSession;
 import us.codecraft.webmagic.ResultItems;
 import us.codecraft.webmagic.Task;
 import us.codecraft.webmagic.pipeline.Pipeline;
-class SQLPipeline implements Pipeline {
+
+/**
+ * 爬虫过程的pipeline，用于将下载的页面保存到mysql
+ */
+class SPipeline implements Pipeline {
 
 
-    public SQLPipeline() {
+    public SPipeline() {
 
     }
 
@@ -17,6 +21,7 @@ class SQLPipeline implements Pipeline {
     public void process(ResultItems resultitems, Task task) {
         task.getSite().setUserAgent(UserAgentBox.getRandomUserAgent());//更新UA
        try (SqlSession session = SqlSessionFactoryUtil.getSqlSessionFactory().openSession()) {
+           //构建page对象
             Page page = new Page();
             page.setUrl(resultitems.getRequest().getUrl());
             page.setTitle(resultitems.get("title"));
@@ -28,6 +33,7 @@ class SQLPipeline implements Pipeline {
             page.setReviews(resultitems.get("reviews"));
             page.setImg(resultitems.get("img"));
             page.setVoted(resultitems.get("voted"));
+            //插入到mysql数据库中
             session.insert("addPage", page);
             session.commit();
             session.close();

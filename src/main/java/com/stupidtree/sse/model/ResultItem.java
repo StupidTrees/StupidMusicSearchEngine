@@ -1,16 +1,33 @@
 package com.stupidtree.sse.model;
 
+import org.apache.lucene.document.Document;
+
+
+/**
+ * 检索结果的一项
+ */
 public class ResultItem {
     String url;
     String img;
     String title;
     String info;
+    String score;
+    int voted;
+    float sort_score;
 
-    public ResultItem(String url, String title, String info,String img) {
-        this.url = url;
+    public ResultItem(Document doc,float sort_score,String title,String snippet) {
+        this.url = doc.get("url");
         this.title = title;
-        this.info = info;
-        this.img = img.replaceAll("https","http");
+        this.info = snippet;
+        this.img = doc.get("img");
+        this.score = doc.get("score");
+        this.sort_score = sort_score;
+        try {
+            voted = Integer.parseInt(doc.get("voted"));
+        } catch (Exception e) {
+            voted = -1;
+            e.printStackTrace();
+        }
     }
 
     public String getUrl() {
@@ -43,5 +60,21 @@ public class ResultItem {
 
     public void setImg(String img) {
         this.img = img;
+    }
+
+    public int getVoted() {
+        return voted;
+    }
+
+    public void setVoted(int voted) {
+        this.voted = voted;
+    }
+
+    public float getSort_score() {
+        return sort_score;
+    }
+
+    public void setSort_score(float sort_score) {
+        this.sort_score = sort_score;
     }
 }

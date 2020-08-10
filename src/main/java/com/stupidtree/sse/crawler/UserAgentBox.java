@@ -2,6 +2,9 @@ package com.stupidtree.sse.crawler;
 
 import java.util.Random;
 
+/**
+ * 随机获取UA的类
+ */
 public class UserAgentBox {
     static String[] user_agents = new String[]{
             "Mozilla/4.0(compatible;MSIE6.0;WindowsNT5.1;SV1;AcooBrowser;.NETCLR1.1.4322;.NETCLR2.0.50727)",

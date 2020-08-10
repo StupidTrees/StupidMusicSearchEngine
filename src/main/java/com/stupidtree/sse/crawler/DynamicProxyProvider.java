@@ -16,10 +16,15 @@ import java.util.Timer;
 import java.util.TimerTask;
 import java.util.concurrent.atomic.AtomicInteger;
 
+/**
+ * 动态代理Provider
+ */
 public class DynamicProxyProvider implements ProxyProvider {
-    private final List<Proxy> proxies;
+    private final List<Proxy> proxies; //ip池对象
     private final AtomicInteger pointer;
     boolean changeIP = true;
+
+    //定时更换代理ip池
     public DynamicProxyProvider(float minutes) {
         this(new ArrayList<>(), new AtomicInteger(-1));
         int mill = (int) (minutes*60*1000);
@@ -80,9 +85,11 @@ public class DynamicProxyProvider implements ProxyProvider {
     }
 
 
+    //更换ip池
     private void refreshIPs(){
         proxies.clear();
         try {
+            //向ip供应网站提交申请，返回ip列表
             Connection c =
                     Jsoup.connect("http://dps.kdlapi.com/api/getdps")
                             .data("orderid","949635147994496")

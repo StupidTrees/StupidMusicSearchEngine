@@ -6,19 +6,32 @@ import com.stupidtree.sse.utils.JsonUtils;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * 搜索结果的一页
+ */
 public class SearchResult {
     List<ResultItem> resultItems;
     long totalNum;
     int page;
     int totalPages;
     int pageSize;
+    float responseTime;
 
-    public SearchResult(List<ResultItem> resultItems, long totalNum, int page) {
+    public SearchResult(List<ResultItem> resultItems, long totalNum, int page, float responseTime) {
         this.resultItems = resultItems;
         this.totalNum = totalNum;
         this.page= page;
+        this.responseTime = responseTime;
         pageSize = Config.getIntegerConfig("result_num");
         totalPages = (int) (totalNum/pageSize );
+    }
+
+    public float getResponseTime() {
+        return responseTime;
+    }
+
+    public void setResponseTime(float responseTime) {
+        this.responseTime = responseTime;
     }
 
     public List<ResultItem> getResultItems() {

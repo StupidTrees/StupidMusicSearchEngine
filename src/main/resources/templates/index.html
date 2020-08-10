@@ -14,14 +14,21 @@
 
     <title>StupidSearchEngine</title>
     <style>
-        .div_foot {
+        .copyright {
             position: absolute;
             height: 50px;
             text-align: center;
             line-height: 50px;
             width: 100%;
         }
-
+        .div_foot {
+            position: absolute;
+            height: 32px;
+            text-align: center;
+            /*line-height: 32px;*/
+            opacity: 70%;
+            width: 100%;
+        }
         .searchBarMain {
             margin: 16px;
             box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1), 0 6px 6px rgba(0, 0, 0, 0.1);
@@ -36,13 +43,13 @@
 <h2 class="mui--text-dark-secondary mui--text-display2" align="center" style="margin: 48px 48px 4px;">
     怪怪的豆瓣音乐搜索
 </h2>
-<div class="mui--text-dark-secondary mui--text-subhead" align="center" >只是个信息检索课程作业 By StupidTree</div>
+<div class="mui--text-dark-secondary mui--text-subhead" align="center" >只是个信息检索课程作业 by StupidTree, HITSZ</div>
 
 <div align="center" style="margin: 48px">
 
     <form id="search-box"  class="searchBarMain mui-form--inline horizontal mui--z2"
           action="search" method="get"
-          style="height: 32px;width: 90%;max-width: 800px">
+          style="height: 32px;width: 95%;max-width: 800px">
         <div class="mui-textfield" style="width: 100%;padding: 0 0 0 0;max-lines: 1;height: 100%">
             <label for="query"></label><input type="text" name="text" id="query" value=" ">
         </div>

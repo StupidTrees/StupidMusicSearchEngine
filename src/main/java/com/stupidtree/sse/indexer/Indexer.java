@@ -2,7 +2,6 @@ package com.stupidtree.sse.indexer;
 
 
 import com.stupidtree.sse.model.Page;
-import com.stupidtree.sse.searcher.AnalyzerBox;
 import com.stupidtree.sse.utils.Config;
 import com.stupidtree.sse.utils.JsonUtils;
 import net.minidev.json.JSONObject;
@@ -11,7 +10,6 @@ import org.apache.ibatis.session.*;
 import org.apache.lucene.analysis.Analyzer;
 import org.apache.lucene.document.*;
 import org.apache.lucene.index.*;
-import org.apache.lucene.search.BoostAttribute;
 import org.apache.lucene.store.Directory;
 import org.apache.lucene.store.FSDirectory;
 
@@ -22,6 +20,9 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 
 
+/**
+ * 索引控制类
+ */
 public class Indexer {
     static Thread indexer;
     static String status = "not-started";
@@ -30,6 +31,10 @@ public class Indexer {
         return s == null ? "" : s;
     }
 
+
+    /**
+     * 开始构建索引
+     */
     public static void start()  {
         if("running".equals(status)) {
             return;
@@ -73,37 +78,19 @@ public class Indexer {
     }
 
 
+    /**
+     * 删除索引
+     */
     public static void deleteIndex() {
         if(!"running".equals(status)){
             delete(Config.getStringConfig("index_path"));
         }
     }
 
-    private static boolean delete(String path) {
-        File file = new File(path);
-        if (!file.exists()) {
-            return false;
-        }
-        if (file.isFile()) {
-            return file.delete();
-        }
-        File[] files = file.listFiles();
-        if (files != null) {
-            for (File f : files) {
-                if (f.isFile()) {
-                    if (!f.delete()) {
-                        return false;
-                    }
-                } else {
-                    if (!delete(f.getAbsolutePath())) {
-                        return false;
-                    }
-                }
-            }
-        }
-        return file.delete();
-    }
 
+    /**
+     * @return 索引是否存在
+     */
     public static boolean indexExists(){
         File file = new File(Config.getStringConfig("index_path"));
         if (!file.exists()) {
@@ -117,6 +104,9 @@ public class Indexer {
     }
 
 
+    /**
+     * 构建索引需要的Document对象
+     */
     private static Document createDocument(Page page){
         Document document = new Document();
 
@@ -151,17 +141,6 @@ public class Indexer {
         Field reviews = new  Field("reviews", fillNull(page.getReviews()), type0);//不进行正则，越多说明越important
 
 
-
-//        Field url = new StringField("url", fillNull(page.getUrl()), Field.Store.YES);
-//        Field title = new TextField("title", fillNull(page.getTitle()), Field.Store.YES);
-//        Field score = new StringField("score", fillNull(page.getScore()), Field.Store.YES);
-//        Field info = new TextField("info", fillNull(page.getInfo()), Field.Store.YES);
-//        Field description = new TextField("description", fillNull(page.getDescription()), Field.Store.YES);
-//        Field tracklist = new TextField("tracklist", fillNull(page.getTracklist()), Field.Store.YES);
-//        Field comments = new TextField("comments", fillNull(page.getComments()), Field.Store.YES);
-//        Field reviews = new TextField("reviews", fillNull(page.getReviews()), Field.Store.YES);
-//        Field img = new StringField("img", fillNull(page.getImg()), Field.Store.YES);
-        // 将field域设置到Document对象中
         document.add(url);
         document.add(title);
         document.add(score);
@@ -174,7 +153,38 @@ public class Indexer {
         document.add(voted);
         return document;
     }
+
+
+    /**
+     * @return 索引状态
+     */
     public static JSONObject showState(){
         return JsonUtils.getJson("indexing-exist",indexExists(),"status",status,"message",message,"thread",indexer==null?"null":indexer.getState().name());
     }
+
+    private static boolean delete(String path) {
+        File file = new File(path);
+        if (!file.exists()) {
+            return false;
+        }
+        if (file.isFile()) {
+            return file.delete();
+        }
+        File[] files = file.listFiles();
+        if (files != null) {
+            for (File f : files) {
+                if (f.isFile()) {
+                    if (!f.delete()) {
+                        return false;
+                    }
+                } else {
+                    if (!delete(f.getAbsolutePath())) {
+                        return false;
+                    }
+                }
+            }
+        }
+        return file.delete();
+    }
+
 }

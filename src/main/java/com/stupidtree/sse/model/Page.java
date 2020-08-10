@@ -1,17 +1,20 @@
 package com.stupidtree.sse.model;
 
+/**
+ * 一个豆瓣音乐页面
+ */
 public class Page {
-    int id = 0;
-    int voted = 0;
-    String url;
-    String title;
-    String score;
-    String info;
-    String description;
-    String tracklist;
-    String comments;
-    String reviews;
-    String img;
+    int id = 0; //在数据库中的id
+    int voted = 0; //评分人数
+    String url; //网页链接
+    String title; //标题
+    String score; //豆瓣评分
+    String info; //基本信息
+    String description; //描述
+    String tracklist; //曲目表
+    String comments; //评论
+    String reviews; //乐评
+    String img; //封面url
     public Page(){
         super();
     }

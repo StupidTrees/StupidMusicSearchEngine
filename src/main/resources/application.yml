@@ -1,5 +1,5 @@
 server:
-  port: 8080
+  port: 2333
 spring:
   thymeleaf:
     enabled: true  #开启thymeleaf视图解析
